@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 enum FutureError: ErrorType {
   case Fail
 }
@@ -18,21 +16,25 @@ enum FutureError: ErrorType {
 enum ResultPromiseStatus { case Pending, Fulfilled }
 
 
+func createPromise<T, U: ErrorType>(operation: (completed:(result: Result<T, U>) -> Void) -> Void) -> ResultPromise<T, U> {
+  let promise = ResultPromise(operation: operation)
+  promise.executeOperation()
+  return promise
+}
+
+
+
 class ResultPromise<T, U: ErrorType> {
   
-  var thenBlock: ((value: T) ->  T)?
-  var finallyBlock: ((value: T) ->  Void)?
-  var flatMapBlock: ((value: T) ->  ResultPromise<T, U>)?
-  var catchBlock: ((error: U) -> Void)?
+  private var operationBlock: ((completed:(result: Result<T, U>) -> Void) -> Void)?
+  private var thenBlock: ((value: T) ->  T)?
+  private var finallyBlock: ((value: T) ->  Void)?
+  private var flatMapBlock: ((value: T) ->  ResultPromise<T, U>)?
+  private var catchBlock: ((error: U) -> Void)?
   
-  var nextFuture: ResultPromise<T, U>?
+  private var nextFuture: ResultPromise<T, U>?
   
-  
-  init(operation: (completed:(result: Result<T, U>) -> Void) -> Void) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-      operation(completed: self.complete)
-    })
-  }
+
   
   func then(then: (value: T) -> T) -> ResultPromise {
     self.nextFuture = ResultPromise(then: then)
@@ -53,33 +55,30 @@ class ResultPromise<T, U: ErrorType> {
   }
   
   
-  private init(finally: (T -> Void)) {
-    self.finallyBlock = finally
-  }
+  private init(operation: (completed:(result: Result<T, U>) -> Void) -> Void) { self.operationBlock = operation }
   
-  private init(then: (T -> T)) {
-    self.thenBlock = then
-  }
+  private init(finally: (T -> Void)) { self.finallyBlock = finally }
   
-  private init(flatMap: (T ->  ResultPromise<T, U>)) {
-    self.flatMapBlock = flatMap
-  }
+  private init(then: (T -> T)) { self.thenBlock = then }
   
-  private init(catchAll: (U -> Void)) {
-    self.catchBlock = catchAll
-  }
+  private init(flatMap: (T ->  ResultPromise<T, U>)) { self.flatMapBlock = flatMap }
+  
+  private init(catchAll: (U -> Void)) { self.catchBlock = catchAll }
   
 }
 
-extension ResultPromise {
+private extension ResultPromise {
   
-  
-  
-  private func complete(result: Result<T, U>) {
-    self.nextFuture?.executeNext(result)
+  func executeOperation() {
+    func complete(result: Result<T, U>) {
+      self.nextFuture?.executeNext(result)
+    }
+
+    self.operationBlock?(completed: complete)
   }
   
-  private func executeNext(result: Result<T, U>) {
+  
+  func executeNext(result: Result<T, U>) {
     
     switch result {
     case .Success(let value):
@@ -104,7 +103,5 @@ extension ResultPromise {
       }
       
     }
-    
-    
   }
 }

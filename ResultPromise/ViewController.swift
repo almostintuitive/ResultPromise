@@ -9,13 +9,15 @@
 import UIKit
 
 class ViewController: UIViewController {
+  
+
 
   override func viewDidLoad() {
     super.viewDidLoad()
     let future = createPromise { completed in
-      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
-        completed(result: Result.Success(true))
-      })
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+          completed(result: Result.Success(true))
+        })
       }.then {
         
         print("1: \($0)")
@@ -35,19 +37,25 @@ class ViewController: UIViewController {
         return self.longTask($0)
       }.flatMap { value -> ResultPromise<Bool, FutureError> in
         
+        print("4: \(value)")
+
         // explicitly declare parameters + return type
         return self.errorTask(value)
       }.then { value in
         
-        print("4: \(value)")
+        print("5: \(value)")
         return false
-      }.catchAll { error in
         
+      
+      }.finally { (value) -> Void in
+        print("finally: \(value)")
+      }.catchAll { error in
+      
         print("error: \(error)")
-    }
-    //    }.finally { (value) -> Void in
-    //      print("5: \(value)")
-    //    }
+      }
+    
+    
+    
   }
 
 
@@ -69,6 +77,13 @@ class ViewController: UIViewController {
     }
   }
   
+  func longTaskWithCompletionBlock(code code: String, callback: ((result : Result<Bool, FutureError>) -> Void)) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+      callback(result: .Success(true))
+    })
+  }
+  
+
 
 }
 

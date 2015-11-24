@@ -34,8 +34,6 @@ class ResultPromise<T, U: ErrorType> {
   
   private var nextFuture: ResultPromise<T, U>?
   
-
-  
   func then(then: (value: T) -> T) -> ResultPromise {
     self.nextFuture = ResultPromise(then: then)
     return self.nextFuture!
@@ -46,14 +44,15 @@ class ResultPromise<T, U: ErrorType> {
     return self.nextFuture!
   }
   
-  func finally(finally: (value: T) -> Void) {
+  func finally(finally: (value: T) -> Void) -> ResultPromise {
     self.nextFuture = ResultPromise(finally: finally)
+    return self.nextFuture!
   }
   
-  func catchAll(catchAll: (error: U) -> Void) {
+  func catchAll(catchAll: (error: U) -> Void) -> ResultPromise {
     self.nextFuture = ResultPromise(catchAll: catchAll)
+    return self.nextFuture!
   }
-  
   
   private init(operation: (completed:(result: Result<T, U>) -> Void) -> Void) { self.operationBlock = operation }
   

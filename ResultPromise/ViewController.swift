@@ -35,7 +35,7 @@ class ViewController: UIViewController {
       }.flatMap {
         
         return self.longTask($0)
-      }.flatMap { value -> ResultPromise<Bool, FutureError> in
+      }.flatMap { (value: ResultPromise<Bool>) -> ResultPromise<String> in
         
         print("4: \(value)")
 
@@ -60,7 +60,7 @@ class ViewController: UIViewController {
 
 
   
-  func longTask(value: Bool) -> ResultPromise<Bool, FutureError> {
+  func longTask(value: Bool) -> ResultPromise<Bool> {
     return createPromise { (completed) -> Void in
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
         completed(result: Result.Success(value))
@@ -69,15 +69,15 @@ class ViewController: UIViewController {
   }
   
   
-  func errorTask(value: Bool) -> ResultPromise<Bool, FutureError> {
+  func errorTask(value: Bool) -> ResultPromise<String> {
     return createPromise { (completed) -> Void in
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-        completed(result: Result.Failure(FutureError.Fail))
+        completed(result: Result.Error(FutureError.Fail))
       })
     }
   }
   
-  func longTaskWithCompletionBlock(code code: String, callback: ((result : Result<Bool, FutureError>) -> Void)) {
+  func longTaskWithCompletionBlock(code code: String, callback: ((result : Result<Bool>) -> Void)) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
       callback(result: .Success(true))
     })

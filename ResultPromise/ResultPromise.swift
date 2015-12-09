@@ -10,15 +10,13 @@ import Foundation
 
 func createPromise<T>(operation: (completed:(result: Result<T>) -> Void) -> Void) -> ResultPromise<T> {
   let promise = ResultPromise<T>()
-  promise.operationBlock = operation
-  promise.executeOperation()
+  promise.executeOperation(operation)
   return promise
 }
 
 
 public class ResultPromise<T> {
   
-  private var operationBlock: ((completed:(result: Result<T>) -> Void) -> Void)?
   private var callback: (Result<T> -> Void)?
   
   public func then(f: T -> Void) -> ResultPromise {
@@ -66,18 +64,16 @@ public class ResultPromise<T> {
 
 private extension ResultPromise {
   
-  private func subscribe(closure: Result<T> -> Void) -> ResultPromise<T> {
-    self.callback = closure
+  private func subscribe(callback: Result<T> -> Void) -> ResultPromise<T> {
+    self.callback = callback
     return self
   }
   
-  private func executeOperation() {
+  private func executeOperation(operation: ((completed:(result: Result<T>) -> Void) -> Void)) {
     func complete(result: Result<T>) {
       self.execute(result)
     }
-
-    self.operationBlock?(completed: complete)
-    self.operationBlock = nil
+    operation(completed: complete)
   }
   
   

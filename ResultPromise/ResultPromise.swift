@@ -8,9 +8,14 @@
 
 import Foundation
 
+
+
 func createPromise<T>(operation: (completed:(result: Result<T>) -> Void) -> Void) -> ResultPromise<T> {
   let promise = ResultPromise<T>()
-  promise.executeOperation(operation)
+  func complete(result: Result<T>) {
+    promise.execute(result)
+  }
+  operation(completed: complete)
   return promise
 }
 
@@ -63,39 +68,18 @@ public class ResultPromise<T> {
   }
   
   
-  public func wrap<U>(f: (value: T, wrap: (Result<U> -> Void)) -> Void) -> ResultPromise<U> {
-    let nextPromise = ResultPromise<U>()
-    subscribe { result in
-      switch result {
-      case .Success(let value):
-        f(value: value, wrap: { nextResult  in
-          nextPromise.execute(nextResult)
-        })
-      case .Error(let error):
-        nextPromise.execute(.Error(error))
-      }
-    }
-    return nextPromise
-  }
+
   
 }
 
-private extension ResultPromise {
+internal extension ResultPromise {
   
-  private func subscribe(callback: Result<T> -> Void) -> ResultPromise<T> {
+  internal func subscribe(callback: Result<T> -> Void) -> ResultPromise<T> {
     self.callback = callback
     return self
   }
   
-  private func executeOperation(operation: ((completed:(result: Result<T>) -> Void) -> Void)) {
-    func complete(result: Result<T>) {
-      self.execute(result)
-    }
-    operation(completed: complete)
-  }
-  
-  
-  private func execute(value: Result<T>) {
+  internal func execute(value: Result<T>) {
     self.callback?(value)
     self.callback = nil
   }

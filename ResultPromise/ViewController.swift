@@ -66,9 +66,9 @@ class ViewController: UIViewController {
     }
   }
   
-  func longTaskWithCompletionBlock(code code: String, completion: (Result<Bool> -> Void)) {
+  func longTaskWithCompletionBlock(code code: String, completion: (result: Result<Bool>) -> Void) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-      completion(.Success(true))
+      completion(result: .Success(true))
     })
   }
   

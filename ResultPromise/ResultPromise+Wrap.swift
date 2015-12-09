@@ -10,12 +10,12 @@ import Foundation
 
 public extension ResultPromise {
   
-  public func wrap<U>(f: (value: T, wrap: (Result<U> -> Void)) -> Void) -> ResultPromise<U> {
+  public func wrap<U>(f: (value: T, completion: (Result<U> -> Void)) -> Void) -> ResultPromise<U> {
     let nextPromise = ResultPromise<U>()
     subscribe { result in
       switch result {
       case .Success(let value):
-        f(value: value, wrap: { nextResult  in
+        f(value: value, completion: { nextResult  in
           nextPromise.execute(nextResult)
         })
       case .Error(let error):

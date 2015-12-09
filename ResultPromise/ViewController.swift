@@ -38,8 +38,8 @@ class ViewController: UIViewController {
       print("4: \($0)")
     }.catchAll {
       print("error: \($0)")
-    }.wrap { (value, wrap: (Result<Bool> -> Void)) -> Void in
-      self.longTaskWithCompletionBlock(code: value, completion: wrap)
+    }.wrap { (value, completion: (Result<Bool> -> Void)) -> Void in
+      self.longTaskWithCompletionBlock(code: value, completion: completion)
     }.then {
       print("5: \($0)")
     }

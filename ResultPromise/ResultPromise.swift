@@ -21,42 +21,47 @@ public class ResultPromise<T> {
   private var operationBlock: ((completed:(result: Result<T>) -> Void) -> Void)?
   private var callback: (Result<T> -> Void)?
   
-  public func then(thenClosure: T -> Void) -> ResultPromise {
+  public func then(f: T -> Void) -> ResultPromise {
     let nextPromise = ResultPromise()
     subscribe { result in
-      thenClosure(result.value!)
-      nextPromise.execute(result)
+      nextPromise.execute(result.onSuccess(f))
     }
     return nextPromise
   }
   
-  public func map<U>(mapClosure: T -> U) -> ResultPromise<U> {
+  public func map<U>(f: T -> U) -> ResultPromise<U> {
     let nextPromise = ResultPromise<U>()
     subscribe { result in
-      nextPromise.execute(result.map(mapClosure))
+      nextPromise.execute(result.map(f))
     }
     return nextPromise
   }
   
-  public func flatMap<U>(flatMapClosure: T -> ResultPromise<U>) -> ResultPromise<U> {
+  public func flatMap<U>(f: T -> ResultPromise<U>) -> ResultPromise<U> {
     let nextPromise = ResultPromise<U>()
     subscribe { result in
-      let nestedPromise = flatMapClosure(result.value!)
-      nextPromise.subscribe{ result in
-        nestedPromise.execute(result)
+      switch result {
+      case .Success(let value):
+        let nestedPromise = f(value)
+        nestedPromise.subscribe{ result in
+          nextPromise.execute(result)
+        }
+      case .Error(let error):
+        nextPromise.execute(Result.Error(error))
       }
     }
     return nextPromise
   }
 
   
-//  func catchAll(catchAll: (error: ErrorType) -> Void) -> ResultPromise {
-//    let nextPromise = ResultPromise<T>()
-//    
-//    nextPromise.catchBlock = catchAll
-//    return nextPromise
-//  }
-//  
+  public func catchAll(f: ErrorType -> Void) -> ResultPromise {
+    let nextPromise = ResultPromise<T>()
+    subscribe { result in
+      nextPromise.execute(result.onError(f))
+    }
+    return nextPromise
+  }
+  
 }
 
 private extension ResultPromise {
@@ -68,41 +73,17 @@ private extension ResultPromise {
   
   private func executeOperation() {
     func complete(result: Result<T>) {
-      self.callback?(result)
+      self.execute(result)
     }
 
     self.operationBlock?(completed: complete)
+    self.operationBlock = nil
   }
   
   
   private func execute(value: Result<T>) {
     self.callback?(value)
+    self.callback = nil
   }
-  
-//  func executeNext(result: Result<T>) {
-//    
-//    switch result {
-//    case .Success(let value):
-//      if let newValue = self.thenBlock?(value: value) {
-//        self.nextFuture?.executeNext(.Success(newValue))
-//      }
-//      
-//      if let nestedFuture = self.flatMapBlock?(value: value) {
-//        nestedFuture.nextFuture = self.nextFuture
-//      }
-//      
-//      if let finallyBlock = self.finallyBlock {
-//        finallyBlock(value: value)
-//      }
-//      
-//    case .Error(let error):
-//      
-//      if let catchBlock = catchBlock {
-//        catchBlock(error: error)
-//      } else {
-//        self.nextFuture?.executeNext(result)
-//      }
-//      
-//    }
-//  }
+
 }

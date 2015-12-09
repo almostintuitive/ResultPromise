@@ -32,45 +32,13 @@ class ViewController: UIViewController {
       return self.stringTask(result)
     }.then { result in
       print("3: \(result)")
+    }.flatMap { result -> ResultPromise<String> in
+      return self.errorTask(true)
+    }.then {
+      print("4: \($0)")
+    }.catchAll {
+      print("error: \($0)")
     }
-    
-//      }.map {
-//        
-//        print("1: \($0)")
-//        return true
-//      }.map { value in
-//        
-//        // explicitly declare parameters
-//        print("2: \(value)")
-//        return false
-//      }.then { value -> Bool in
-//        
-//        // explicitly declare parameters + return type
-//        print("3: \(value)")
-//        return true
-//      }.flatMap {
-//        
-//        return self.longTask($0)
-//      }.flatMap { (value: ResultPromise<Bool>) -> ResultPromise<String> in
-//        
-//        print("4: \(value)")
-//
-//        // explicitly declare parameters + return type
-//        return self.errorTask(value)
-//      }.then { value in
-//        
-//        print("5: \(value)")
-//        return false
-//        
-//      
-//      }.finally { (value) -> Void in
-//        print("finally: \(value)")
-//      }.catchAll { error in
-//      
-//        print("error: \(error)")
-//      }
-//    
-    
     
   }
 

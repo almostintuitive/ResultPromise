@@ -17,7 +17,8 @@ enum ResultPromiseStatus { case Pending, Fulfilled }
 
 
 func createPromise<T>(operation: (completed:(result: Result<T>) -> Void) -> Void) -> ResultPromise<T> {
-  let promise = ResultPromise(operation: operation)
+  let promise = ResultPromise<T>()
+  promise.operationBlock = operation
   promise.executeOperation()
   return promise
 }
@@ -35,34 +36,28 @@ class ResultPromise<T> {
   private var nextFuture: ResultPromise<T>?
   
   func then(then: (value: T) -> T) -> ResultPromise {
-    self.nextFuture = ResultPromise(then: then)
+    let nextPromise = ResultPromise<T>()
+    nextPromise.thenBlock = then
     return self.nextFuture!
   }
   
   func flatMap(flatMap: (value: T) -> ResultPromise<T>) -> ResultPromise {
-    self.nextFuture = ResultPromise(flatMap: flatMap)
+    let nextPromise = ResultPromise<T>()
+    nextPromise.flatMapBlock = flatMap
     return self.nextFuture!
   }
   
   func finally(finally: (value: T) -> Void) -> ResultPromise {
-    self.nextFuture = ResultPromise(finally: finally)
+    let nextPromise = ResultPromise<T>()
+    nextPromise.finallyBlock = finally
     return self.nextFuture!
   }
   
   func catchAll(catchAll: (error: ErrorType) -> Void) -> ResultPromise {
-    self.nextFuture = ResultPromise(catchAll: catchAll)
+    let nextPromise = ResultPromise<T>()
+    nextPromise.catchBlock = catchAll
     return self.nextFuture!
   }
-  
-  private init(operation: (completed:(result: Result<T>) -> Void) -> Void) { self.operationBlock = operation }
-  
-  private init(finally: (T -> Void)) { self.finallyBlock = finally }
-  
-  private init(then: (T -> T)) { self.thenBlock = then }
-  
-  private init(flatMap: (T ->  ResultPromise<T>)) { self.flatMapBlock = flatMap }
-  
-  private init(catchAll: (ErrorType -> Void)) { self.catchBlock = catchAll }
   
 }
 

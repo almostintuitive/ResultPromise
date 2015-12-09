@@ -8,14 +8,6 @@
 
 import Foundation
 
-enum FutureError: ErrorType {
-  case Fail
-}
-
-
-enum ResultPromiseStatus { case Pending, Fulfilled }
-
-
 func createPromise<T>(operation: (completed:(result: Result<T>) -> Void) -> Void) -> ResultPromise<T> {
   let promise = ResultPromise<T>()
   promise.operationBlock = operation
@@ -24,78 +16,93 @@ func createPromise<T>(operation: (completed:(result: Result<T>) -> Void) -> Void
 }
 
 
-
-class ResultPromise<T> {
+public class ResultPromise<T> {
   
   private var operationBlock: ((completed:(result: Result<T>) -> Void) -> Void)?
-  private var thenBlock: ((value: T) ->  T)?
-  private var finallyBlock: ((value: T) ->  Void)?
-  private var flatMapBlock: ((value: T) ->  ResultPromise<T>)?
-  private var catchBlock: ((error: ErrorType) -> Void)?
+  private var callback: (Result<T> -> Void)?
   
-  private var nextFuture: ResultPromise<T>?
-  
-  func then(then: (value: T) -> T) -> ResultPromise {
-    let nextPromise = ResultPromise<T>()
-    nextPromise.thenBlock = then
-    return self.nextFuture!
+  public func then(thenClosure: T -> Void) -> ResultPromise {
+    let nextPromise = ResultPromise()
+    subscribe { result in
+      thenClosure(result.value!)
+      nextPromise.execute(result)
+    }
+    return nextPromise
   }
   
-  func flatMap(flatMap: (value: T) -> ResultPromise<T>) -> ResultPromise {
-    let nextPromise = ResultPromise<T>()
-    nextPromise.flatMapBlock = flatMap
-    return self.nextFuture!
+  public func map<U>(mapClosure: T -> U) -> ResultPromise<U> {
+    let nextPromise = ResultPromise<U>()
+    subscribe { result in
+      nextPromise.execute(result.map(mapClosure))
+    }
+    return nextPromise
   }
   
-  func finally(finally: (value: T) -> Void) -> ResultPromise {
-    let nextPromise = ResultPromise<T>()
-    nextPromise.finallyBlock = finally
-    return self.nextFuture!
+  public func flatMap<U>(flatMapClosure: T -> ResultPromise<U>) -> ResultPromise<U> {
+    let nextPromise = ResultPromise<U>()
+    subscribe { result in
+      let nestedPromise = flatMapClosure(result.value!)
+      nextPromise.subscribe{ result in
+        nestedPromise.execute(result)
+      }
+    }
+    return nextPromise
   }
+
   
-  func catchAll(catchAll: (error: ErrorType) -> Void) -> ResultPromise {
-    let nextPromise = ResultPromise<T>()
-    nextPromise.catchBlock = catchAll
-    return self.nextFuture!
-  }
-  
+//  func catchAll(catchAll: (error: ErrorType) -> Void) -> ResultPromise {
+//    let nextPromise = ResultPromise<T>()
+//    
+//    nextPromise.catchBlock = catchAll
+//    return nextPromise
+//  }
+//  
 }
 
 private extension ResultPromise {
   
-  func executeOperation() {
+  private func subscribe(closure: Result<T> -> Void) -> ResultPromise<T> {
+    self.callback = closure
+    return self
+  }
+  
+  private func executeOperation() {
     func complete(result: Result<T>) {
-      self.nextFuture?.executeNext(result)
+      self.callback?(result)
     }
 
     self.operationBlock?(completed: complete)
   }
   
   
-  func executeNext(result: Result<T>) {
-    
-    switch result {
-    case .Success(let value):
-      if let newValue = self.thenBlock?(value: value) {
-        self.nextFuture?.executeNext(.Success(newValue))
-      }
-      
-      if let nestedFuture = self.flatMapBlock?(value: value) {
-        nestedFuture.nextFuture = self.nextFuture
-      }
-      
-      if let finallyBlock = self.finallyBlock {
-        finallyBlock(value: value)
-      }
-      
-    case .Error(let error):
-      
-      if let catchBlock = catchBlock {
-        catchBlock(error: error)
-      } else {
-        self.nextFuture?.executeNext(result)
-      }
-      
-    }
+  private func execute(value: Result<T>) {
+    self.callback?(value)
   }
+  
+//  func executeNext(result: Result<T>) {
+//    
+//    switch result {
+//    case .Success(let value):
+//      if let newValue = self.thenBlock?(value: value) {
+//        self.nextFuture?.executeNext(.Success(newValue))
+//      }
+//      
+//      if let nestedFuture = self.flatMapBlock?(value: value) {
+//        nestedFuture.nextFuture = self.nextFuture
+//      }
+//      
+//      if let finallyBlock = self.finallyBlock {
+//        finallyBlock(value: value)
+//      }
+//      
+//    case .Error(let error):
+//      
+//      if let catchBlock = catchBlock {
+//        catchBlock(error: error)
+//      } else {
+//        self.nextFuture?.executeNext(result)
+//      }
+//      
+//    }
+//  }
 }

@@ -37,6 +37,7 @@ public class ResultPromise<T> {
   
   public func flatMap<U>(f: T -> ResultPromise<U>) -> ResultPromise<U> {
     let nextPromise = ResultPromise<U>()
+
     subscribe { result in
       switch result {
       case .Success(let value):
@@ -48,6 +49,7 @@ public class ResultPromise<T> {
         nextPromise.execute(Result.Error(error))
       }
     }
+    
     return nextPromise
   }
 
@@ -56,6 +58,22 @@ public class ResultPromise<T> {
     let nextPromise = ResultPromise<T>()
     subscribe { result in
       nextPromise.execute(result.onError(f))
+    }
+    return nextPromise
+  }
+  
+  
+  public func wrap<U>(f: (value: T, wrap: (Result<U> -> Void)) -> Void) -> ResultPromise<U> {
+    let nextPromise = ResultPromise<U>()
+    subscribe { result in
+      switch result {
+      case .Success(let value):
+        f(value: value, wrap: { nextResult  in
+          nextPromise.execute(nextResult)
+        })
+      case .Error(let error):
+        nextPromise.execute(.Error(error))
+      }
     }
     return nextPromise
   }

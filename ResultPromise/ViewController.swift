@@ -32,13 +32,18 @@ class ViewController: UIViewController {
       return self.stringTask(result)
     }.then { result in
       print("3: \(result)")
-    }.flatMap { result -> ResultPromise<String> in
-      return self.errorTask(true)
+//    }.flatMap { result -> ResultPromise<String> in
+//      return self.errorTask(true)
     }.then {
       print("4: \($0)")
     }.catchAll {
       print("error: \($0)")
+    }.wrap { (value, wrap: (Result<Bool> -> Void)) -> Void in
+      self.longTaskWithCompletionBlock(code: value, completion: wrap)
+    }.then {
+      print("5: \($0)")
     }
+    
     
   }
 
@@ -61,9 +66,9 @@ class ViewController: UIViewController {
     }
   }
   
-  func longTaskWithCompletionBlock(code code: String, callback: ((result : Result<Bool>) -> Void)) {
+  func longTaskWithCompletionBlock(code code: String, completion: (Result<Bool> -> Void)) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-      callback(result: .Success(true))
+      completion(.Success(true))
     })
   }
   

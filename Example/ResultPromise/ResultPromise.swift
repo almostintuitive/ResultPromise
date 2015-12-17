@@ -66,6 +66,7 @@ public class ResultPromise<T, Error: ErrorType> {
     let nextPromise = ResultPromise<T, Error>()
     subscribe { result in
       nextPromise.execute(result.mapError {
+        
         f($0)
         return $0
       })
@@ -81,9 +82,8 @@ public class ResultPromise<T, Error: ErrorType> {
 
 internal extension ResultPromise {
   
-  internal func subscribe(callback: Result<T, Error> -> Void) -> ResultPromise {
+  internal func subscribe(callback: Result<T, Error> -> Void) {
     self.callback = callback
-    return self
   }
   
   internal func execute(value: Result<T, Error>) {

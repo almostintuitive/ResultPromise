@@ -58,13 +58,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ResultPromise/ViewController.swift"
-            timestampString = "471377161.80904"
+            timestampString = "472050624.576494"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "longTaskWithCompletionBlock(code:completion:)"
-            landmarkType = "5">
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "ViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

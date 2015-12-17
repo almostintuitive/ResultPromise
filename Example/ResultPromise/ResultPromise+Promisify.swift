@@ -10,7 +10,7 @@ import Foundation
 
 public extension ResultPromise {
   
-  public func wrap<U>(f: (value: T, completion: (Result<U, Error> -> Void)) -> Void) -> ResultPromise<U, Error> {
+  public func promisify<U>(f: (value: T, completion: (Result<U, Error> -> Void)) -> Void) -> ResultPromise<U, Error> {
     let nextPromise = ResultPromise<U, Error>()
     subscribe { result in
       switch result {

@@ -35,7 +35,7 @@ public class ResultPromise<T, Error: ErrorType> {
     return nextPromise
   }
   
-  public func map<U>(f: T -> U) -> ResultPromise<U, Error> {
+  public func then<U>(f: T -> U) -> ResultPromise<U, Error> {
     let nextPromise = ResultPromise<U, Error>()
     subscribe { result in
       nextPromise.execute(result.map(f))
@@ -43,7 +43,7 @@ public class ResultPromise<T, Error: ErrorType> {
     return nextPromise
   }
   
-  public func flatMap<U>(f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
+  public func then<U>(f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
     let nextPromise = ResultPromise<U, Error>()
 
     subscribe { result in

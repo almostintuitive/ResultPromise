@@ -19,16 +19,16 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    let future = createPromise { completed in
+    createPromise { completed in
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
         completed(result: Result.Success(false))
       })
-    }.map { result -> Bool in
+    }.then { result -> Bool in
       print("1: \(result)")
       return true
     }.then {
       print("2: \($0)")
-    }.flatMap { result -> ResultPromise<String, FutureError> in
+    }.then { result -> ResultPromise<String, FutureError> in
       return self.stringTask(result)
     }.then { result in
       print("3: \(result)")
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
       print("4: \($0)")
 //    }.catchAll {
 //      print("error: \($0)")
-    }.wrap { (value, completion: (Result<Bool, FutureError> -> Void)) -> Void in
+    }.promisify { (value, completion: (Result<Bool, FutureError> -> Void)) -> Void in
       self.longTaskWithCompletionBlock(code: value, completion: completion)
     }.then {
       print("5: \($0)")

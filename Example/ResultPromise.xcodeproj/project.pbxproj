@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C4C335F1C1997A000FFD14A /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4C335D1C1997A000FFD14A /* Result.swift */; };
 		0C4C33601C1997A000FFD14A /* ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4C335E1C1997A000FFD14A /* ResultType.swift */; };
+		0C8022FE1C35AC38003BC13E /* ResultPromise+Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8022FD1C35AC38003BC13E /* ResultPromise+Create.swift */; };
 		0C839F351BFDD74D00255EDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C839F341BFDD74D00255EDD /* AppDelegate.swift */; };
 		0C839F371BFDD74D00255EDD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C839F361BFDD74D00255EDD /* ViewController.swift */; };
 		0C839F3A1BFDD74D00255EDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C839F381BFDD74D00255EDD /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		0C4C335D1C1997A000FFD14A /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		0C4C335E1C1997A000FFD14A /* ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultType.swift; sourceTree = "<group>"; };
+		0C8022FD1C35AC38003BC13E /* ResultPromise+Create.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ResultPromise+Create.swift"; sourceTree = "<group>"; };
 		0C839F311BFDD74D00255EDD /* ResultPromise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResultPromise.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C839F341BFDD74D00255EDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0C839F361BFDD74D00255EDD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				0C839F341BFDD74D00255EDD /* AppDelegate.swift */,
 				0C839F361BFDD74D00255EDD /* ViewController.swift */,
 				0C839F541BFDD77100255EDD /* ResultPromise.swift */,
+				0C8022FD1C35AC38003BC13E /* ResultPromise+Create.swift */,
 				0CC494571C22EC0C002E2A06 /* ResultPromise+Threading.swift */,
 				0CD0D6131C18A92D00BA628B /* ResultPromise+Promisify.swift */,
 				0C839F381BFDD74D00255EDD /* Main.storyboard */,
@@ -222,6 +225,7 @@
 			files = (
 				0CC494581C22EC0C002E2A06 /* ResultPromise+Threading.swift in Sources */,
 				0C839F371BFDD74D00255EDD /* ViewController.swift in Sources */,
+				0C8022FE1C35AC38003BC13E /* ResultPromise+Create.swift in Sources */,
 				0C4C335F1C1997A000FFD14A /* Result.swift in Sources */,
 				0C839F551BFDD77100255EDD /* ResultPromise.swift in Sources */,
 				0C839F351BFDD74D00255EDD /* AppDelegate.swift in Sources */,

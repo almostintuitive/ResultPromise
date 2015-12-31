@@ -9,24 +9,22 @@
 import Foundation
 
 
-func waitUntilDone(queue: dispatch_queue_t, block: () -> Void) {
-  let group = dispatch_group_create()
-  dispatch_group_async(group, queue, {
-    block()
-  })
-  dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
-}
+
 
 
 public enum Thread {
   case Main
   case Background
-  var queue: dispatch_queue_t {
+  case Same
+  
+  var queue: dispatch_queue_t? {
     switch self {
     case .Main:
       return dispatch_get_main_queue()
     case .Background:
-      return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
+      return dispatch_get_global_queue(Int(QOS_CLASS_BACKGROUND.rawValue), 0)
+    default:
+      return nil
     }
   }
 }
@@ -34,27 +32,39 @@ public enum Thread {
 public extension ResultPromise {
   
   public func thenOn(thread: Thread, f: T -> Void) -> ResultPromise {
-    var promise: ResultPromise?
-    waitUntilDone(thread.queue) {
-      promise = self.then(f)
+    let nextPromise = ResultPromise()
+    subscribe(thread) { result in
+      nextPromise.execute(result.map {
+        f($0)
+        return $0
+      })
     }
-    return promise!
+    return nextPromise
   }
   
   public func thenOn<U>(thread: Thread, f: T -> U) -> ResultPromise<U, Error> {
-    var promise: ResultPromise<U, Error>?
-    waitUntilDone(thread.queue) {
-      promise = self.then(f)
+    let nextPromise = ResultPromise<U, Error>()
+    subscribe(thread) { result in
+      nextPromise.execute(result.map(f))
     }
-    return promise!
+    return nextPromise
   }
-  
+
   public func thenOn<U>(thread: Thread, f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
-    var promise: ResultPromise<U, Error>?
-    waitUntilDone(thread.queue) {
-      promise = self.then(f)
+    let nextPromise = ResultPromise<U, Error>()
+    subscribe(thread) { result in
+      switch result {
+      case .Success(let value):
+        let nestedPromise = f(value)
+        nestedPromise.subscribe(thread) { result in
+          nextPromise.execute(result)
+        }
+      case .Failure(let error):
+        nextPromise.execute(Result.Failure(error))
+      }
     }
-    return promise!
+    
+    return nextPromise
   }
   
 

@@ -34,10 +34,10 @@ class ViewController: UIViewController {
       print("3: \(result)")
 //    }.flatMap { result -> ResultPromise<String> in
 //      return self.errorTask(true)
-    }.then {
+    }.thenOn(Thread.Main) {
       print("4: \($0)")
-//    }.catchAll {
-//      print("error: \($0)")
+      //    }.catchAll {
+      //      print("error: \($0)")
     }.promisify { (value, completion: (Result<Bool, FutureError> -> Void)) -> Void in
       self.longTaskWithCompletionBlock(code: value, completion: completion)
     }.then {

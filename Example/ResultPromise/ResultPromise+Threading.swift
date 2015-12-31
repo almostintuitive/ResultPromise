@@ -9,7 +9,17 @@
 import Foundation
 
 
-
+func executeOnThread(thread: Thread, f: () -> Void) {
+  guard let queue = thread.queue else {
+    f()
+    return
+  }
+  guard !(NSThread.currentThread() == NSThread.mainThread() && thread == .Main) else {
+    f()
+    return
+  }
+  dispatch_async(queue, f)
+}
 
 
 public enum Thread {
@@ -31,40 +41,26 @@ public enum Thread {
 
 public extension ResultPromise {
   
-  public func thenOn(thread: Thread, f: T -> Void) -> ResultPromise {
-    let nextPromise = ResultPromise()
-    subscribe(thread) { result in
-      nextPromise.execute(result.map {
-        f($0)
-        return $0
+  public func on(thread: Thread) -> ResultPromise {
+    let newPromise = ResultPromise()
+    subscribe { result in
+      executeOnThread(thread, f: {
+        newPromise.execute(result)
       })
     }
-    return nextPromise
+    return newPromise
+  }
+  
+  public func thenOn(thread: Thread, f: T -> Void) -> ResultPromise {
+    return self.on(thread).then(f)
   }
   
   public func thenOn<U>(thread: Thread, f: T -> U) -> ResultPromise<U, Error> {
-    let nextPromise = ResultPromise<U, Error>()
-    subscribe(thread) { result in
-      nextPromise.execute(result.map(f))
-    }
-    return nextPromise
+    return self.on(thread).then(f)
   }
 
   public func thenOn<U>(thread: Thread, f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
-    let nextPromise = ResultPromise<U, Error>()
-    subscribe(thread) { result in
-      switch result {
-      case .Success(let value):
-        let nestedPromise = f(value)
-        nestedPromise.subscribe(thread) { result in
-          nextPromise.execute(result)
-        }
-      case .Failure(let error):
-        nextPromise.execute(Result.Failure(error))
-      }
-    }
-    
-    return nextPromise
+    return self.on(thread).then(f)
   }
   
 

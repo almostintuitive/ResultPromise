@@ -34,7 +34,7 @@ class ViewController: UIViewController {
       print("3: \(result)")
 //    }.flatMap { result -> ResultPromise<String> in
 //      return self.errorTask(true)
-    }.thenOn(Thread.Main) {
+    }.thenOn(.Main) {
       print("4: \($0)")
       //    }.catchAll {
       //      print("error: \($0)")

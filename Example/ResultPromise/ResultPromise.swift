@@ -10,21 +10,16 @@ import Foundation
 
 
 
-func createPromise<T, Error: ErrorType>(operation: (completed:(result: Result<T, Error>) -> Void) -> Void) -> ResultPromise<T, Error> {
-  let promise = ResultPromise<T, Error>()
-  func complete(result: Result<T, Error>) {
-    promise.execute(result)
-  }
-  operation(completed: complete)
-  return promise
-}
+
 
 
 public class ResultPromise<T, Error: ErrorType> {
   
-  private var callback: (Result<T, Error> -> Void)?
+  internal var callback: (Result<T, Error> -> Void)?
   
   public func then(f: T -> Void) -> ResultPromise {
+    guard callback == nil else { fatalError("promise already has a subscriber") }
+
     let nextPromise = ResultPromise()
     subscribe { result in
       nextPromise.execute(result.map {
@@ -36,6 +31,8 @@ public class ResultPromise<T, Error: ErrorType> {
   }
   
   public func then<U>(f: T -> U) -> ResultPromise<U, Error> {
+    guard callback == nil else { fatalError("promise already has a subscriber") }
+    
     let nextPromise = ResultPromise<U, Error>()
     subscribe { result in
       nextPromise.execute(result.map(f))
@@ -44,6 +41,8 @@ public class ResultPromise<T, Error: ErrorType> {
   }
   
   public func then<U>(f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
+    guard callback == nil else { fatalError("promise already has a subscriber") }
+
     let nextPromise = ResultPromise<U, Error>()
     subscribe { result in
       switch result {
@@ -62,6 +61,8 @@ public class ResultPromise<T, Error: ErrorType> {
 
   
   public func catchAll(f: ErrorType -> Void) -> ResultPromise {
+    guard let _ = callback else { fatalError("promise already has a subscriber") }
+
     let nextPromise = ResultPromise<T, Error>()
     subscribe { result in
       nextPromise.execute(result.mapError {

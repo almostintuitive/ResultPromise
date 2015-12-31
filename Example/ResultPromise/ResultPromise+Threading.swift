@@ -9,7 +9,7 @@
 import Foundation
 
 
-func executeOnThread(thread: Thread, f: () -> Void) {
+private func executeOnThread(thread: Thread, f: () -> Void) {
   guard let queue = thread.queue else {
     f()
     return

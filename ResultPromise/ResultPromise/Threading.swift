@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 private func executeOnThread(thread: Thread, f: () -> Void) {
   guard let queue = thread.queue else {
     f()
@@ -55,12 +54,12 @@ public extension ResultPromise {
     return self.on(thread).then(f)
   }
   
-  public func thenOn<U>(thread: Thread, f: T -> U) -> ResultPromise<U, Error> {
-    return self.on(thread).then(f)
+  public func mapOn<U>(thread: Thread, f: T -> U) -> ResultPromise<U, Error> {
+    return self.on(thread).map(f)
   }
 
-  public func thenOn<U>(thread: Thread, f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
-    return self.on(thread).then(f)
+  public func flatMapOn<U>(thread: Thread, f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
+    return self.on(thread).flatMap(f)
   }
   
 

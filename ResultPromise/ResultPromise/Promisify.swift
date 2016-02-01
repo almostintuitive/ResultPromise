@@ -6,8 +6,6 @@
 //  Copyright © 2015 Mark Aron Szulyovszky. All rights reserved.
 //
 
-import Foundation
-
 public extension ResultPromise {
   
   public func promisify<U>(f: (value: T, completion: (Result<U, Error> -> Void)) -> Void) -> ResultPromise<U, Error> {
@@ -24,6 +22,5 @@ public extension ResultPromise {
     }
     return nextPromise
   }
-
   
 }

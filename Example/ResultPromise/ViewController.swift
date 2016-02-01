@@ -29,20 +29,20 @@ class ViewController: UIViewController {
     
     createPromise { completed in
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
-        completed(result: Result.Success(false))
+        completed(Result.Success(false))
       })
-    }.then { result -> Bool in
+    }.map { result -> Bool in
       print("1: \(result)")
       return true
     }.then {
       print("2: \($0)")
-    }.then { result -> ResultPromise<String, FutureError> in
+    }.flatMap { result -> ResultPromise<String, FutureError> in
       return self.stringTask(result)
     }.then { result in
       print("3: \(result)")
 //    }.flatMap { result -> ResultPromise<String> in
 //      return self.errorTask(true)
-    }.thenOn(.Main) {
+    }.on(.Main).then {
       print("4: \($0)")
       //    }.catchAll {
       //      print("error: \($0)")
@@ -61,7 +61,7 @@ class ViewController: UIViewController {
   func stringTask(value: Bool) -> ResultPromise<String, FutureError> {
     return createPromise { (completed) -> Void in
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-        completed(result: Result.Success("string!"))
+        completed(.Success("string!"))
       })
     }
   }
@@ -70,7 +70,7 @@ class ViewController: UIViewController {
   func errorTask(value: Bool) -> ResultPromise<String, FutureError> {
     return createPromise { (completed) -> Void in
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-        completed(result: Result.Failure(FutureError.Fail))
+        completed(.Failure(FutureError.Fail))
       })
     }
   }

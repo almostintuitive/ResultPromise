@@ -9,28 +9,155 @@
 import XCTest
 @testable import ResultPromise
 
+enum TestError: ErrorType {
+  case Test
+}
+
+
 class ResultPromiseTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+  
+  var readyExpectation: XCTestExpectation!
+  var promise: ResultPromise<Int, TestError>!
+  
+  override func setUp() {
+    super.setUp()
+    readyExpectation = expectationWithDescription("ready")
+    promise = ResultPromise<Int, TestError>()
+  }
+  
+  override func tearDown() {
+    super.tearDown()
+  }
+  
+  // MARK: - Creation
+  
+  func testCreationWithCreatePromise() {
+    let promise: ResultPromise<Int, TestError> = createPromise { (completed) in
+      delay(0.1) {
+        completed(.Success(1))
+      }
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    promise.then { number in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
     }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  func testCreationWithCreateResolve() {
+    promise.then { number in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  
+  // MARK: - Map - single
+  
+  func testMapSuccess() {
+    promise.map { number in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
     }
-    
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  
+  func testMapFailure() {
+    promise.map { number in
+      XCTAssert(false)
+      self.readyExpectation.fulfill()
+    }
+    delay(0.08) {
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Failure(TestError.Test))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  
+  // MARK: - FlatMap - single
+  
+  func testFlatMapSuccess() {
+    promise.flatMap { number -> ResultPromise<String, TestError> in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
+      return ResultPromise(value: .Success("String"))
+    }
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  func testFlatMapFailure() {
+    promise.flatMap { number -> ResultPromise<String, TestError> in
+      XCTAssert(false)
+      return ResultPromise(value: .Success("String"))
+    }
+    delay(0.08) {
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Failure(TestError.Test))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  // MARK: - Then - single
+  
+  func testThenSuccess() {
+    promise.then { number in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  func testThenFailure() {
+    promise.then { number in
+      XCTAssert(false)
+    }
+    delay(0.08) {
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Failure(TestError.Test))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+
+
+  // MARK: - CatchError - single
+  
+  func testCatchErrorSuccess() {
+    promise.catchError { error in
+      XCTAssert(error as! TestError == TestError.Test)
+      self.readyExpectation.fulfill()
+    }
+    delay(0.08) {
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  func testCatchErrorFailure() {
+    promise.catchError { error in
+      XCTAssert(error as! TestError == TestError.Test)
+      self.readyExpectation.fulfill()
+    }
+    promise.resolve(.Failure(TestError.Test))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+}
+
+func delay(delay:Double, _ closure:()->()) {
+  dispatch_after(
+    dispatch_time(
+      DISPATCH_TIME_NOW,
+      Int64(delay * Double(NSEC_PER_SEC))
+    ),
+    dispatch_get_main_queue(), closure)
 }

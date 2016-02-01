@@ -52,12 +52,17 @@ public class ResultPromise<T, Error: ErrorType> {
     let nextPromise = ResultPromise<U, Error>()
     // when this current promise is executed with a result
     subscribe { result in
+      
       switch result {
+      // if it's a success, then 
       case .Success(let value):
+        //
         let nestedPromise = f(value)
         nestedPromise.subscribe { result in
           nextPromise.execute(result)
         }
+      // if it's a failure, re-wrap the error in a new Result.
+      // this is needed, otherwise you'll get a compiler error complaining about type mis-match.
       case .Failure(let error):
         nextPromise.execute(Result.Failure(error))
       }

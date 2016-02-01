@@ -9,7 +9,9 @@
 public extension ResultPromise {
   
   public func promisify<U>(f: (value: T, completion: (Result<U, Error> -> Void)) -> Void) -> ResultPromise<U, Error> {
+    // Create a new Promise
     let nextPromise = ResultPromise<U, Error>()
+    //
     subscribe { result in
       switch result {
       case .Success(let value):

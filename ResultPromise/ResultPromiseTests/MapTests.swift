@@ -49,7 +49,7 @@ class MapTests: XCTestCase {
   }
   
   func testMultipleMapSuccess() {
-    var readyExpectation2 = expectationWithDescription("ready 2")
+    let readyExpectation2 = expectationWithDescription("ready 2")
     
     promise.map { number in
       XCTAssert(number == 1)

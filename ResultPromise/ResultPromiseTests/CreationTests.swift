@@ -69,6 +69,24 @@ class CreationTests: XCTestCase {
   }
   
   
+  func testMultipleCreationWithCreateValue() {
+    
+    let promise = ResultPromise<Int,TestError>(value: Result.Success(100))
+    let readyExpectation2 = expectationWithDescription("ready 2")
+    
+    promise.then { number in
+      XCTAssert(number == 100)
+      self.readyExpectation.fulfill()
+    }
+    promise.then { number in
+      XCTAssert(number == 100)
+      readyExpectation2.fulfill()
+    }
+    
+    
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
 }
 
 func delay(delay:Double, _ closure:()->()) {

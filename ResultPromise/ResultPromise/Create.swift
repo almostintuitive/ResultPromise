@@ -6,6 +6,8 @@
 //  Copyright © 2015 Mark Aron Szulyovszky. All rights reserved.
 //
 
+import Dispatch
+
 // Returns a ResultPromise that'll be fullfilled as soon as the completed function is called
 public func createPromise<T, Error: ErrorType>(operation: (completed: Result<T, Error> -> Void) -> Void) -> ResultPromise<T, Error> {
   
@@ -35,7 +37,9 @@ public extension ResultPromise {
   // This will be passed on immediately to the next promise in the chain.
   public convenience init(value: Result<T, Error>) {
     self.init()
-    resolve(value)
+    dispatch_async(dispatch_get_main_queue()) {
+      self.resolve(value)
+    }
   }
 
 }

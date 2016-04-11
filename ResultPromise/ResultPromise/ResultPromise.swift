@@ -8,11 +8,10 @@
 
 public class ResultPromise<T, Error: ErrorType> {
   
-  internal var callback: (Result<T, Error> -> Void)?
+  internal var callbacks : [(Result<T, Error> -> Void)] = []
   
   /// Executes function if the result is a Success. Returns a new ResultPromise with the same Result it was given.
   public func then(f: T -> Void) -> ResultPromise {
-    guard callback == nil else { fatalError("promise already has a subscriber") }
 
     // create the next promise we'll return
     let nextPromise = ResultPromise()
@@ -29,7 +28,6 @@ public class ResultPromise<T, Error: ErrorType> {
   
   /// Returns a new ResultPromise by mapping `Success`es’ values using `transform`, or re-wrapping `Failure`s’ errors.
   public func map<U>(f: T -> U) -> ResultPromise<U, Error> {
-    guard callback == nil else { fatalError("promise already has a subscriber") }
     
     // create the next promise we'll return
     let nextPromise = ResultPromise<U, Error>()
@@ -46,7 +44,6 @@ public class ResultPromise<T, Error: ErrorType> {
   
   /// Returns a new ResultPromise that's returned from the function if the result is Success, re-wrapps `Failure`s’ errors.
   public func flatMap<U>(f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
-    guard callback == nil else { fatalError("promise already has a subscriber") }
 
     // create the next promise we'll return
     let nextPromise = ResultPromise<U, Error>()
@@ -73,7 +70,6 @@ public class ResultPromise<T, Error: ErrorType> {
 
   
   public func catchError(f: ErrorType -> Void) -> ResultPromise {
-    guard callback == nil else { fatalError("promise already has a subscriber") }
 
     let nextPromise = ResultPromise<T, Error>()
     subscribe { result in
@@ -91,12 +87,12 @@ public class ResultPromise<T, Error: ErrorType> {
 internal extension ResultPromise {
   
   internal func subscribe(callback: Result<T, Error> -> Void) {
-    self.callback = callback
+    callbacks.append(callback)
   }
   
   internal func execute(value: Result<T, Error>) {
-    self.callback?(value)
-    self.callback = nil
+    callbacks.forEach { $0(value) }
+    callbacks.removeAll()
   }
 
 }

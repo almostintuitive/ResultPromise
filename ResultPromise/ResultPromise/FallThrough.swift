@@ -11,7 +11,6 @@ public extension ResultPromise {
   
   // Executes the ResultPromise it was given, but ignores its result and takes the previous result instead.
   public func fallThrough<U, Error2: ErrorType>(f: T -> ResultPromise<U, Error2>) -> ResultPromise {
-    guard callback == nil else { fatalError("promise already has a subscriber") }
     
     let nextPromise = ResultPromise()
     subscribe { firstResult in

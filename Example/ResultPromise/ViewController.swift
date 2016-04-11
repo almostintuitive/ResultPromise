@@ -70,7 +70,7 @@ class ViewController: UIViewController {
       // use on(ThreadType) to switch to a different thread, if you want to.
       print("4: \($0)")
       
-    }.promisify { (value, completion: (Result<Bool, FutureError> -> Void)) -> Void in
+    }.promisify { (value, completion) -> Void in
       
       // Promisify is for turning methods working with completion block easily into Promises.
       // Here I'm calling longTaskWithCompletionBlock and passing the provided completion block to it.

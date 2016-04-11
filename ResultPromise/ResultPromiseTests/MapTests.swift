@@ -47,6 +47,23 @@ class MapTests: XCTestCase {
     promise.resolve(.Failure(TestError.Test))
     waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
   }
+  
+  func testMultipleMapSuccess() {
+    var readyExpectation2 = expectationWithDescription("ready 2")
+    
+    promise.map { number in
+      XCTAssert(number == 1)
+      self.readyExpectation.fulfill()
+    }
+    promise.map { number in
+      XCTAssert(number == 1)
+      readyExpectation2.fulfill()
+    }
+    promise.resolve(.Success(1))
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+
+
+  }
 
 }
 

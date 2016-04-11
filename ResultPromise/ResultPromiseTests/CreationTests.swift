@@ -55,6 +55,20 @@ class CreationTests: XCTestCase {
     waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
   }
   
+  func testCreationWithCreateValue() {
+    
+    let promise = ResultPromise<Int,TestError>(value: Result.Success(100))
+    
+    promise.then { number in
+      XCTAssert(number == 100)
+      self.readyExpectation.fulfill()
+    }
+    
+    
+    waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
+  }
+  
+  
 }
 
 func delay(delay:Double, _ closure:()->()) {

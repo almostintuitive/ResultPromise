@@ -19,5 +19,117 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ResultPromiseTests/MapTests.swift"
+            timestampString = "482077883.465028"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "testMultipleMapSuccess()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ResultPromiseTests/MapTests.swift"
+            timestampString = "482077901.953087"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "testMultipleMapSuccess()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[1] = Value Promoted from Box&gt; of ResultPromiseTests.MapTests.(testMultipleMapSuccess () -&gt; ()).(closure #2)"
+                  moduleName = "ResultPromiseTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/m/Dev/ResultPromise/ResultPromise/ResultPromiseTests/MapTests.swift"
+                  timestampString = "482077926.828896"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ResultPromiseTests.MapTests.(testMultipleMapSuccess () -&gt; ()).(closure #2).(implicit closure #1)"
+                  moduleName = "ResultPromiseTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/m/Dev/ResultPromise/ResultPromise/ResultPromiseTests/MapTests.swift"
+                  timestampString = "482077926.829146"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "47">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ResultPromiseTests/MapTests.swift"
+            timestampString = "482077903.042153"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "testMultipleMapSuccess()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ResultPromiseTests.MapTests.(testMultipleMapSuccess () -&gt; ()).(closure #1)"
+                  moduleName = "ResultPromiseTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/m/Dev/ResultPromise/ResultPromise/ResultPromiseTests/MapTests.swift"
+                  timestampString = "482077926.829292"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ResultPromiseTests.MapTests.(testMultipleMapSuccess () -&gt; ()).(closure #1).(implicit closure #1)"
+                  moduleName = "ResultPromiseTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/m/Dev/ResultPromise/ResultPromise/ResultPromiseTests/MapTests.swift"
+                  timestampString = "482077926.829414"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "47">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

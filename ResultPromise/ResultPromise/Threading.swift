@@ -51,15 +51,15 @@ public extension ResultPromise {
   }
   
   public func thenOn(thread: Thread, f: T -> Void) -> ResultPromise {
-    return self.on(thread).then(f)
+    return on(thread).then(f)
   }
   
   public func mapOn<U>(thread: Thread, f: T -> U) -> ResultPromise<U, Error> {
-    return self.on(thread).map(f)
+    return on(thread).map(f)
   }
 
   public func flatMapOn<U>(thread: Thread, f: T -> ResultPromise<U, Error>) -> ResultPromise<U, Error> {
-    return self.on(thread).flatMap(f)
+    return on(thread).flatMap(f)
   }
   
 

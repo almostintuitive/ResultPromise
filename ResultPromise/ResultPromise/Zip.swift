@@ -14,7 +14,7 @@ extension ResultPromise {
   /// Returns:
   ///  if both were successful: a tuple with the success values of both the previous and the combined promise
   ///  if any of them failed:   it returns a Failure, with any of the Error objects
-  public func zip<U>(f: T -> ResultPromise<U, Error>) -> ResultPromise<(T, U), Error> {
+  public func zip<U>(f: () -> ResultPromise<U, Error>) -> ResultPromise<(T, U), Error> {
     
     // create the next promise we'll return
     let nextPromise = ResultPromise<(T, U), Error>()
@@ -25,7 +25,7 @@ extension ResultPromise {
       // if it's a success, then
       case .Success(let value):
         //
-        let nestedPromise = f(value)
+        let nestedPromise = f()
         nestedPromise.subscribe { newResult in
           nextPromise.execute(newResult.map { (value, $0) })
         }
@@ -37,6 +37,10 @@ extension ResultPromise {
     }
     
     return nextPromise
+  }
+  
+  public func zip<U>(promise: ResultPromise<U, Error>) -> ResultPromise<(T, U), Error> {
+    return self.zip { promise }
   }
   
 }

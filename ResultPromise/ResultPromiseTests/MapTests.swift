@@ -61,8 +61,6 @@ class MapTests: XCTestCase {
     }
     promise.resolve(.Success(1))
     waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
-
-
   }
 
 }

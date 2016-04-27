@@ -17,6 +17,11 @@
 		0C4C33701C19A24800FFD14A /* ResultPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C4C336F1C19A24800FFD14A /* ResultPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0C4C33771C19A24800FFD14A /* ResultPromise.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4C336C1C19A24800FFD14A /* ResultPromise.framework */; };
 		0C4C337C1C19A24800FFD14A /* CreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4C337B1C19A24800FFD14A /* CreationTests.swift */; };
+		0C6A5BD71CD11B63001F3041 /* ZipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6A5BD61CD11B63001F3041 /* ZipTests.swift */; };
+		0C6A5BD91CD11B76001F3041 /* PromisifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6A5BD81CD11B76001F3041 /* PromisifyTests.swift */; };
+		0C6A5BDB1CD11B7F001F3041 /* RecoverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6A5BDA1CD11B7F001F3041 /* RecoverTests.swift */; };
+		0C6A5BDD1CD11B8C001F3041 /* WaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6A5BDC1CD11B8C001F3041 /* WaitTests.swift */; };
+		0C6A5BDF1CD11C16001F3041 /* Delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6A5BDE1CD11C16001F3041 /* Delay.swift */; };
 		0C6F69FB1CBBEB9A00F1003A /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F69F91CBBEB9A00F1003A /* Result.swift */; };
 		0C6F69FC1CBBEB9A00F1003A /* ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F69FA1CBBEB9A00F1003A /* ResultType.swift */; };
 		0C743AD01CD0FFAE0083E342 /* Recover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C743ACF1CD0FFAE0083E342 /* Recover.swift */; };
@@ -50,6 +55,11 @@
 		0C4C33761C19A24800FFD14A /* ResultPromiseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResultPromiseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C4C337B1C19A24800FFD14A /* CreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationTests.swift; sourceTree = "<group>"; };
 		0C4C337D1C19A24800FFD14A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0C6A5BD61CD11B63001F3041 /* ZipTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZipTests.swift; sourceTree = "<group>"; };
+		0C6A5BD81CD11B76001F3041 /* PromisifyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromisifyTests.swift; sourceTree = "<group>"; };
+		0C6A5BDA1CD11B7F001F3041 /* RecoverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverTests.swift; sourceTree = "<group>"; };
+		0C6A5BDC1CD11B8C001F3041 /* WaitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaitTests.swift; sourceTree = "<group>"; };
+		0C6A5BDE1CD11C16001F3041 /* Delay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delay.swift; sourceTree = "<group>"; };
 		0C6F69F91CBBEB9A00F1003A /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		0C6F69FA1CBBEB9A00F1003A /* ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultType.swift; sourceTree = "<group>"; };
 		0C743ACF1CD0FFAE0083E342 /* Recover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recover.swift; sourceTree = "<group>"; };
@@ -109,6 +119,7 @@
 				0C13976C1C5CFE3A00FD5AAE /* Wait.swift */,
 				0CCFAAC11CCFD70E000D46FF /* Zip.swift */,
 				0C743ACF1CD0FFAE0083E342 /* Recover.swift */,
+				0C6A5BDE1CD11C16001F3041 /* Delay.swift */,
 				0C4C336F1C19A24800FFD14A /* ResultPromise.h */,
 				0C4C33711C19A24800FFD14A /* Info.plist */,
 			);
@@ -123,6 +134,10 @@
 				0C4931331C5F6CE200445D2F /* FlatMapTests.swift */,
 				0CB3B7491C5F6D1C00B7E2EE /* ThenTests.swift */,
 				0CB3B74B1C5F6D4A00B7E2EE /* CatchErrorTests.swift */,
+				0C6A5BD61CD11B63001F3041 /* ZipTests.swift */,
+				0C6A5BD81CD11B76001F3041 /* PromisifyTests.swift */,
+				0C6A5BDA1CD11B7F001F3041 /* RecoverTests.swift */,
+				0C6A5BDC1CD11B8C001F3041 /* WaitTests.swift */,
 				0C4C337D1C19A24800FFD14A /* Info.plist */,
 			);
 			path = ResultPromiseTests;
@@ -236,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C6A5BDF1CD11C16001F3041 /* Delay.swift in Sources */,
 				0CCFAAC21CCFD70E000D46FF /* Zip.swift in Sources */,
 				0C1397751C5CFE5500FD5AAE /* Create.swift in Sources */,
 				0C13976E1C5CFE3A00FD5AAE /* Wait.swift in Sources */,
@@ -253,11 +269,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C6A5BDD1CD11B8C001F3041 /* WaitTests.swift in Sources */,
 				0CB3B74A1C5F6D1C00B7E2EE /* ThenTests.swift in Sources */,
 				0C4931321C5F6CA100445D2F /* MapTests.swift in Sources */,
 				0C4931341C5F6CE200445D2F /* FlatMapTests.swift in Sources */,
 				0CB3B74C1C5F6D4A00B7E2EE /* CatchErrorTests.swift in Sources */,
 				0C4C337C1C19A24800FFD14A /* CreationTests.swift in Sources */,
+				0C6A5BD71CD11B63001F3041 /* ZipTests.swift in Sources */,
+				0C6A5BDB1CD11B7F001F3041 /* RecoverTests.swift in Sources */,
+				0C6A5BD91CD11B76001F3041 /* PromisifyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

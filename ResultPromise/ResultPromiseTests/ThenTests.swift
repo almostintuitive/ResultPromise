@@ -45,5 +45,7 @@ class ThenTests: XCTestCase {
     promise.resolve(.Failure(TestError.Test))
     waitForExpectationsWithTimeout(0.1) { error in XCTAssertNil(error, "Timeout error") }
   }
+  
+  // TODO: Subscribe tests
 
 }

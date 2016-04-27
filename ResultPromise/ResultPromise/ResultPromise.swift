@@ -87,6 +87,24 @@ public class ResultPromise<T, Error: ErrorType> {
     
     return nextPromise
   }
+  
+  /// Use it to transform the .Success value into a new ResultPromise.
+  /// Returns a new ResultPromise that's returned from the function if the result is Success, re-wrapps `Failure`s’ errors.
+  public func replace<U, Error2: ErrorType>(f: Result<T, Error> -> ResultPromise<U, Error2>) -> ResultPromise<U, Error2> {
+    
+    // create the next promise we'll return
+    let nextPromise = ResultPromise<U, Error2>()
+    // when this current promise is executed with a result
+    addCallback { result in
+      let nestedPromise = f(result)
+      nestedPromise.subscribe { result in
+        nextPromise.execute(result)
+      }
+    }
+    
+    return nextPromise
+  }
+  
 
   /// Use it to subscribe to .Failure events
   public func catchError(f: ErrorType -> Void) -> ResultPromise {

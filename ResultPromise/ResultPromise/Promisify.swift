@@ -8,11 +8,12 @@
 
 public extension ResultPromise {
   
+  /// Use it to wrap a function that takes a completion block into a ResultPromise.
   public func promisify<U>(f: (value: T, completion: (Result<U, Error> -> Void)) -> Void) -> ResultPromise<U, Error> {
     // Create a new Promise
     let nextPromise = ResultPromise<U, Error>()
     //
-    subscribe { result in
+    addCallback { result in
       switch result {
       case .Success(let value):
         f(value: value, completion: { nextResult  in

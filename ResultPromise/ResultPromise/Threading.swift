@@ -42,7 +42,7 @@ public extension ResultPromise {
   
   public func on(thread: Thread) -> ResultPromise {
     let newPromise = ResultPromise()
-    subscribe { result in
+    addCallback { result in
       executeOnThread(thread, f: {
         newPromise.execute(result)
       })
